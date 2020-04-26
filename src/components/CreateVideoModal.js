@@ -16,7 +16,8 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
   })
 
   const getSearchResults = (query) => {
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${query}&key=${process.env.REACT_APP_YOUTUBE_API}`)
+    const API_KEY =`${process.env.REACT_APP_YOUTUBE_API}`
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${query}&key=${API_KEY}`)
     .then(results => results.json())
     .then(json => {
       setModalState(prevState => ({
