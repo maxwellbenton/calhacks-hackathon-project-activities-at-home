@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Header, Icon, Modal, Input, Form } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal } from 'semantic-ui-react'
 import CreateVideoModal from './CreateVideoModal'
 import CreateTaskModal from './CreateTaskModal'
 

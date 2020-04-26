@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Header, Icon, Modal, Input, Form, List } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal, List } from 'semantic-ui-react'
 import CreateActivityModal from  './CreateActivityModal'
 import EditVideoModal from './EditVideoModal'
 import EditTaskModal from './EditTaskModal'
@@ -17,14 +17,11 @@ const ListItem = ({title, description, handleOpen}) => {
 }
 
 const displayEditButton = (classId, context, activity) => {
-  console.log('desc', activity.description)
   switch(activity.type) {
     case "Video":
       return <EditVideoModal context={context} classId={classId} activityId={activity.activityId} title={activity.title} description={activity.description} url={activity.url} advanceAtEnd={activity.advanceAtEnd} completionApprovalRequired={activity.completionApprovalRequired}/>
-      break;
     case "Task":
       return <EditTaskModal context={context} classId={classId} activityId={activity.activityId} title={activity.title} description={activity.description} completionApprovalRequired={activity.completionApprovalRequired}/>
-      break;
     default:
       return null;
   }
@@ -42,9 +39,14 @@ const Activity = ({context, classId, activity}) => {
   )
 }
 
+const handleClassStart = ({classId, context}, handleClose) => {
+  context.setCurrentClass(classId)
+  handleClose()
+}
+
 const displayClassActivities = ({classId, context}) => {
   let classItem = context.data.classes.find(classItem => classItem.id === classId)
-  return classItem.activities.map(activity => <Activity context={context} key={activity.id} classId={classId} activity={activity}/>)
+  return classItem.activities.map(activity => <Activity context={context} key={activity.activityId} classId={classId} activity={activity}/>)
 }
 
 const ClassMenuItem = (props) => {
@@ -72,7 +74,7 @@ const ClassMenuItem = (props) => {
       <Button basic color='red' inverted onClick={handleClose}>
         <Icon name='remove' /> Cancel
       </Button>
-      <Button color='green' inverted>
+      <Button disabled={props.activities.length === 0} color='green' inverted onClick={() => handleClassStart(props, handleClose)}>
         <Icon name='checkmark' /> Start Class
       </Button>
     </Modal.Actions>

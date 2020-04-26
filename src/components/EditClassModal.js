@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Button, Header, Icon, Modal, Input, Form } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal, Form } from 'semantic-ui-react'
 
 const EditClassModal = ({id, title, description, context}) => {
   let [modalState, setModalState] = useState({ modalOpen: false, id: null, title: "", description: "" })

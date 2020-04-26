@@ -12,7 +12,7 @@ const EditTaskModal = ({classId, activityId, context, handleParentClose, title, 
   })
 
   useEffect(() => {
-    setModalState(prevState => ({...prevState, activityId, title, description, completionApprovalRequired, activityId}))
+    setModalState(prevState => ({...prevState, title, description, completionApprovalRequired, activityId}))
   }, [modalState.modalOpen])
 
   const handleChange = event => {

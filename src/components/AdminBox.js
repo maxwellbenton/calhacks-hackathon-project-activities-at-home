@@ -1,9 +1,12 @@
 import React from 'react'
+import PasswordRequired from './PasswordRequired'
 
-export default function AdminBox() {
+const AdminBox = ({context}) => {
   return (
     <div>
-      Password set <span>Change Password</span>
+      Password set <PasswordRequired buttonText="Change Password" text="Change Password" password={context.data.password} action={context.setPassword}/>
     </div>
   )
 }
+
+export default AdminBox

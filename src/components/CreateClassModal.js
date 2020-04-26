@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Button, Header, Icon, Modal, Input, Form } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal, Form } from 'semantic-ui-react'
 
 const CreateClassModal = ({context}) => {
   let [modalState, setModalState] = useState({ modalOpen: false, title: "", description: "" })

@@ -25,27 +25,27 @@ const taskTemplate = {
   completionApprovalRequired: false
 }
 
-const checklistTemplate = {
-  type: "Checklist",
-  activityId: null,
-  title: "",
-  list: [],
-  completionApprovalRequired: false
-}
+// const checklistTemplate = {
+//   type: "Checklist",
+//   activityId: null,
+//   title: "",
+//   list: [],
+//   completionApprovalRequired: false
+// }
 
-const checklistItem = {
-  id: null,
-  note: "",
-  completed: false
-}
+// const checklistItem = {
+//   id: null,
+//   note: "",
+//   completed: false
+// }
 
-const resourceTemplate = {
-  type: "resource",
-  activityId: null,
-  title: "",
-  list: [],
-  completionApprovalRequired: false
-}
+// const resourceTemplate = {
+//   type: "resource",
+//   activityId: null,
+//   title: "",
+//   list: [],
+//   completionApprovalRequired: false
+// }
 
 const classTemplate = {
   type: "class",
@@ -63,7 +63,7 @@ class ConfigProvider extends React.Component {
       currentClass: null,
       currentActivity: null
     },
-    setPassword: (password) => {
+    setPassword: (password = "") => {
       this.setState(prevState => ({
         ...prevState,
         data: {
@@ -72,7 +72,7 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    createClass: (title, description) => {
+    createClass: (title = "", description = "") => {
       let newClass = { ...classTemplate, 
                         id: uuid(),
                         title, 
@@ -86,7 +86,7 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    updateClass: (id, title, description) => {
+    updateClass: (id, title = "", description = "") => {
       let newClass = { ...classTemplate, 
                         id,
                         title, 
@@ -109,8 +109,8 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    addVideoToClass: (classId, title, url, description, advanceAtEnd, completionApprovalRequired) => {
-      let newVideo = { ...videoTemplate, 
+    addVideoToClass: (classId, title = "", url = "", description = "", advanceAtEnd, completionApprovalRequired = false) => {
+      let newVideo = { ...videoTemplate,
                         activityId: uuid(),
                         title, 
                         url, 
@@ -128,7 +128,7 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    updateVideo: (classId, title, url, description, advanceAtEnd, completionApprovalRequired, activityId) => {
+    updateVideo: (classId, title = "", url = "", description = "", advanceAtEnd, completionApprovalRequired = false, activityId) => {
       let newVideo = { ...videoTemplate, 
         activityId,
         title, 
@@ -164,7 +164,7 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    addTaskToClass: (classId, title, description, completionApprovalRequired) => {
+    addTaskToClass: (classId, title = "", description = "", completionApprovalRequired = false) => {
       let newTask = { ...taskTemplate, 
                         activityId: uuid(),
                         title, 
@@ -181,7 +181,7 @@ class ConfigProvider extends React.Component {
         }
       }))
     },
-    updateTask: (classId, title, url, description, advanceAtEnd, completionApprovalRequired, activityId) => {
+    updateTask: (classId, title = "", url = "", description = "", advanceAtEnd, completionApprovalRequired = false, activityId) => {
       let newTask = { ...taskTemplate, 
         activityId,
         title, 
@@ -198,6 +198,81 @@ class ConfigProvider extends React.Component {
             }
             return classItem
           })
+        }
+      }))
+    },
+    setCurrentClass: classId => {
+      let currentClass = this.state.data.classes.find(classItem => classItem.id === classId)
+      this.setState(prevState => ({
+        ...prevState,
+        data: {
+          ...prevState.data,
+          currentClass: classId,
+          currentActivity: currentClass.activities[0].activityId
+        }
+      }))
+    },
+    setCurrentActivity: activityId => {
+      this.setState(prevState => ({
+        ...prevState,
+        data: {
+          ...prevState.data,
+          currentActivity: activityId
+        }
+      }))
+    },
+    advanceToNextActivity: () => {
+      let currentClass = this.state.data.classes.find(classItem => classItem.id === this.state.data.currentClass)
+      let currentActivityIndex
+      try {
+        currentActivityIndex = currentClass.activities.findIndex(activity => activity.activityId === this.state.data.currentActivity)
+      } catch {
+        this.setState(prevState => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            currentClass: null,
+            currentActivity: null
+          }
+        }))
+        return null
+      }
+      
+      if (currentClass.activities[currentActivityIndex+1]) {
+        this.setState(prevState => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            currentActivity: currentClass.activities[currentActivityIndex+1].activityId
+          }
+        }))
+      } else if (!currentClass.activities[currentActivityIndex+1] && this.state.data.currentActivity !== "done") {
+        this.setState(prevState => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            currentClass: "done",
+            currentActivity: "done"
+          }
+        }))
+      } else {
+        this.setState(prevState => ({
+          ...prevState,
+          data: {
+            ...prevState.data,
+            currentClass: null,
+            currentActivity: null
+          }
+        }))
+      }
+    },
+    endClass: () => {
+      this.setState(prevState => ({
+        ...prevState,
+        data: {
+          ...prevState.data,
+          currentClass: null,
+          currentActivity: null
         }
       }))
     }
@@ -220,6 +295,7 @@ class ConfigProvider extends React.Component {
   }
 
   render() {
+    console.log(this.state.currentActivity)
     return (
       <Provider
         value={{ ...this.state }}

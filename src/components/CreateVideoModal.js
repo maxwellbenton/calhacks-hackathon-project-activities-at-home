@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
-import { Button, Icon, Modal, Form, Checkbox } from 'semantic-ui-react'
-
+import { Button, Icon, Modal, Form, Checkbox, List } from 'semantic-ui-react'
+import VideoResult from './VideoResult'
+import debounce from 'debounce'
 
 const CreateVideoModal = ({classId, context, handleParentClose}) => {
   let [modalState, setModalState] = useState({ 
@@ -8,10 +9,23 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
     title: "", 
     description: "", 
     url: "",
+    selectedVideo: null,
+    searchResults: [],
     advanceAtEnd: true,
     completionApprovalRequired: false
   })
-  
+
+  const getSearchResults = (query) => {
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${query}&key=${process.env.REACT_APP_YOUTUBE_API}`)
+    .then(results => results.json())
+    .then(json => {
+      setModalState(prevState => ({
+        ...prevState,
+        searchResults: json.items
+      }))
+    })
+  }
+
   const handleChange = event => {
     event.persist()
     setModalState(prevState => ({
@@ -35,7 +49,14 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
     setModalState({ modalOpen: false })
     handleParentClose()
   }
-
+  const handleSearchChange = event => debounce(getSearchResults(event.target.value), 500)
+  const handleVideoSelect = (selectedVideo) => {
+    setModalState(prevState => ({
+      ...prevState,
+      url: `https://www.youtube.com/watch?v=${selectedVideo.id.videoId}`,
+      selectedVideo: selectedVideo
+    }))
+  }
 
   return(
     <Modal 
@@ -48,7 +69,6 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
         <Form>
           <Form.Group>
             <Form.Input onChange={handleChange} value={modalState.title} id="title" label="Activity Name" placeholder="Activity Name"/>
-            <Form.Input onChange={handleChange} value={modalState.url} id="url" label="Video URL" placeholder="Video URL"/>
             <Form.TextArea onChange={handleChange} value={modalState.description} id="description" label="Activity Description" placeholder="Activity Description"/>
             <Form.Field
               control={Checkbox}
@@ -64,6 +84,12 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
               checked={modalState.completionApprovalRequired}
               label='Require parental approval before completion'
             />
+            <Form.Input readOnly value={modalState.url} id="url" label="Video URL" placeholder="Video URL"/>
+            {modalState.selectedVideo ? <VideoResult result={modalState.selectedVideo} handleVideoSelect={() => {}}/> : null}
+            <Form.Input onChange={handleSearchChange} id="search" label="Video Search" placeholder="Search Youtube"/>
+            <List>
+              {modalState.searchResults && modalState.searchResults.length > 0 ? modalState.searchResults.map(result => <VideoResult result={result} handleVideoSelect={handleVideoSelect}/>) : null}
+            </List>
           </Form.Group>
         </Form>
       </Modal.Content>
