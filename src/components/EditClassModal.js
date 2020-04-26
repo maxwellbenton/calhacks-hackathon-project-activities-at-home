@@ -16,6 +16,7 @@ const EditClassModal = ({id, title, description, context}) => {
   const handleOpen = () => setModalState(prevState => ({...prevState, modalOpen: true }))
   const handleClose = () => setModalState(prevState => ({...prevState, modalOpen: false }))
   const handleUpdateClass = (event) => {
+    event.preventDefault()
     event.persist()
     let formData = event.target.parentElement.parentNode
     let id = modalState.id
@@ -27,22 +28,19 @@ const EditClassModal = ({id, title, description, context}) => {
   
   return (
   <Modal 
-    trigger={<Button onClick={handleOpen}>Edit Class</Button>} 
+    trigger={<Button basic onClick={handleOpen}>Edit Class</Button>} 
     open={modalState.modalOpen}
-    basic
     size='small'
   >
     <Header icon='arrow alternate circle right outline' content='Edit Class' />
     <Modal.Content>
-      <Form>
-        <Form.Group>
+      <Form onSubmit={handleUpdateClass}>
           <Form.Input onChange={handleChange} id="title" label="Class Name" placeholder="Class Name" value={modalState.title} />
           <Form.TextArea onChange={handleChange} id="description" label="Class Description" placeholder="Class Description" value={modalState.description} />
-        </Form.Group>
       </Form>
     </Modal.Content>
     <Modal.Actions>
-      <Button basic color='red' inverted onClick={handleClose}>
+      <Button inverted primary onClick={handleClose}>
         <Icon name='remove' /> Cancel
       </Button>
       <Button color='red' inverted onClick={() => {context.deleteClass(modalState.id)}}>

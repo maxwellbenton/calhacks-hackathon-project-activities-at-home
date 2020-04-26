@@ -14,6 +14,7 @@ const CreateClassModal = ({context}) => {
   const handleOpen = () => setModalState({ modalOpen: true })
   const handleClose = () => setModalState({ modalOpen: false })
   const handleCreateClass = (event) => {
+    event.preventDefault()
     event.persist()
     context.createClass(modalState.title, modalState.description)
     setModalState({ modalOpen: false })
@@ -21,22 +22,19 @@ const CreateClassModal = ({context}) => {
 
   return (
   <Modal 
-    trigger={<Button onClick={handleOpen}>Create Class</Button>} 
+    trigger={<Button color='green' inverted onClick={handleOpen}>Create Class</Button>} 
     open={modalState.modalOpen}
-    basic
     size='small'
   >
     <Header icon='arrow alternate circle right outline' content='Create New Class' />
     <Modal.Content>
-      <Form>
-        <Form.Group>
+      <Form onSubmit={handleCreateClass}>
           <Form.Input onChange={handleChange} value={modalState.title} id="title" label="Class Name" placeholder="Class Name"/>
           <Form.TextArea onChange={handleChange} value={modalState.description} id="description" label="Class Description" placeholder="Class Description"/>
-        </Form.Group>
       </Form>
     </Modal.Content>
     <Modal.Actions>
-      <Button basic color='red' inverted onClick={handleClose}>
+      <Button inverted primary inverted onClick={handleClose}>
         <Icon name='remove' /> Cancel
       </Button>
       <Button color='green' inverted onClick={handleCreateClass}>

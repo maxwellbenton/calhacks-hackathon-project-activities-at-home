@@ -33,7 +33,8 @@ const EditTaskModal = ({classId, activityId, context, handleParentClose, title, 
 
   const handleOpen = () => setModalState({ modalOpen: true })
   const handleClose = () => setModalState({ modalOpen: false })
-  const handleUpdateTask = () => {
+  const handleUpdateTask = (event) => {
+    event.preventDefault()
     context.updateTask(classId, modalState.title, modalState.url, modalState.description, modalState.advanceAtEnd, modalState.completionApprovalRequired, modalState.activityId)
     setModalState({ modalOpen: false })
     
@@ -48,14 +49,12 @@ const EditTaskModal = ({classId, activityId, context, handleParentClose, title, 
 
   return(
     <Modal 
-      trigger={<Button onClick={handleOpen}>Edit Task</Button>} 
+      trigger={<Button basic floated="right" onClick={handleOpen}>Edit Task</Button>} 
       open={modalState.modalOpen}
-      basic
       size='small'
     >
       <Modal.Content>
-        <Form>
-          <Form.Group>
+        <Form onSubmit={handleUpdateTask}>
             <Form.Input onChange={handleChange} value={modalState.title} id="title" label="Activity Name" placeholder="Activity Name"/>
             <Form.TextArea onChange={handleChange} value={modalState.description} id="description" label="Activity Description" placeholder="Activity Description"/>
             <Form.Field
@@ -65,11 +64,10 @@ const EditTaskModal = ({classId, activityId, context, handleParentClose, title, 
               checked={modalState.completionApprovalRequired}
               label='Require parental approval before completion'
             />
-          </Form.Group>
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button basic color='red' inverted onClick={handleClose}>
+        <Button inverted primary inverted onClick={handleClose}>
           <Icon name='remove' /> Cancel
         </Button>
         <Button color='red' inverted onClick={handleDelete}>

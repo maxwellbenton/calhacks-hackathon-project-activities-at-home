@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'semantic-ui-react'
+import { Button, Header } from 'semantic-ui-react'
 import Video from './Video'
 import Task from './Task'
 import PasswordRequired from './PasswordRequired'
@@ -20,9 +20,11 @@ const Activity = ({context, classId, activityId}) => {
   let activity = classItem.activities.find(activity => activity.activityId === activityId)
   return (
     <div>
-      <h2>{classItem.title} <Button onClick={context.endClass}>Exit</Button></h2>
+      <Header as="h2">{classItem.title} <PasswordRequired buttonText="Exit" text="Password Required" password={context.data.password} action={context.endClass}/></Header>
         {determineActivityType(activity)}
-      {activity.completionApprovalRequired ? <PasswordRequired buttonText="Next" text="Password Required" password={context.data.password} action={context.advanceToNextActivity}/> : <Button onClick={context.advanceToNextActivity}>Next</Button>}
+      <div style={{padding: '10px 0'}}>
+        {activity.completionApprovalRequired ? <PasswordRequired buttonText="Next" text="Password Required" password={context.data.password} action={context.advanceToNextActivity}/> : <Button onClick={context.advanceToNextActivity}>Next</Button>}
+      </div>
     </div>
   )
 }

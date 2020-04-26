@@ -42,3 +42,12 @@
   width: 80%;
   margin: auto;
 }
+
+.title {
+  margin: 0 5px;
+}
+
+.searchResultsList {
+  overflow: scroll;
+  height: 100%;
+}

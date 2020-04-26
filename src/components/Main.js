@@ -6,7 +6,7 @@ import Activity from './Activity';
 import ClassMenuItem from './ClassMenuItem';
 import CreateClassModal from './CreateClassModal';
 import Done from './Done';
-import { List } from 'semantic-ui-react'
+import { List, Segment } from 'semantic-ui-react'
 
 const parentOrChild = (context) => {
   if(context.data.currentClass) {
@@ -22,7 +22,9 @@ const parentOrChild = (context) => {
     return  (
       <div>
         <div>{context.data.password ? <AdminBox context={context}/> : <Password />}</div>
-        Classes <CreateClassModal context={context} />
+        <Segment vertical>
+          Classes <CreateClassModal context={context} />
+        </Segment>
         <div className="listBox">
           <List selection verticalAlign='middle' divided relaxed>
             {context.data.classes.map(classItem => <ClassMenuItem key={classItem.id} classId={classItem.id} {...classItem} context={context}/>)}

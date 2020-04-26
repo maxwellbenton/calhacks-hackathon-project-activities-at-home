@@ -28,7 +28,8 @@ const CreateTaskModal = ({classId, context, handleParentClose}) => {
 
   const handleOpen = () => setModalState({ modalOpen: true })
   const handleClose = () => setModalState({ modalOpen: false })
-  const handleCreateTask = () => {
+  const handleCreateTask = event => {
+    event.preventDefault()
     context.addTaskToClass(classId, modalState.title, modalState.description, modalState.completionApprovalRequired)
     setModalState({ modalOpen: false })
     handleParentClose()
@@ -39,12 +40,10 @@ const CreateTaskModal = ({classId, context, handleParentClose}) => {
     <Modal 
       trigger={<Button onClick={handleOpen}>Add Task</Button>} 
       open={modalState.modalOpen}
-      basic
       size='small'
     >
       <Modal.Content>
-        <Form>
-          <Form.Group>
+        <Form onSubmit={handleCreateTask}>
             <Form.Input onChange={handleChange} value={modalState.title} id="title" label="Activity Name" placeholder="Activity Name"/>
             <Form.TextArea onChange={handleChange} value={modalState.description} id="description" label="Activity Description" placeholder="Activity Description"/>
             <Form.Field
@@ -54,11 +53,10 @@ const CreateTaskModal = ({classId, context, handleParentClose}) => {
               checked={modalState.completionApprovalRequired}
               label='Require parental approval before completion'
             />
-          </Form.Group>
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button basic color='red' inverted onClick={handleClose}>
+        <Button inverted primary inverted onClick={handleClose}>
           <Icon name='remove' /> Cancel
         </Button>
         <Button color='green' inverted onClick={handleCreateTask}>

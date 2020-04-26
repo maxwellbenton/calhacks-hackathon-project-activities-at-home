@@ -22,13 +22,13 @@ const PasswordRequired = ({buttonText, text, password, action}) => {
 
   return(
     <Modal 
-      trigger={<Button onClick={handleOpen}>{buttonText}</Button>} 
+      trigger={<Button basic onClick={handleOpen}>{buttonText}</Button>} 
       open={modalState.modalOpen}
       basic
       size='small'
     >
       <Modal.Content>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Input type='password' onChange={handleChange} value={modalState.password} id="password" label="Password Required" placeholder={text}/>
         </Form>
       </Modal.Content>

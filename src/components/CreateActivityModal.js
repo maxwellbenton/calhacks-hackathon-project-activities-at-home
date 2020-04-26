@@ -11,9 +11,8 @@ const CreateActivityModal = ({classId, context}) => {
 
   return (
   <Modal 
-    trigger={<Button onClick={handleOpen}>Create Activity</Button>} 
+    trigger={<Button color="green" inverted onClick={handleOpen}>Add Activity</Button>} 
     open={modalState.modalOpen}
-    basic
     size='small'
   >
     <Header icon='arrow alternate circle right outline' content='Create New Activity' />
@@ -22,7 +21,7 @@ const CreateActivityModal = ({classId, context}) => {
       <CreateTaskModal classId={classId}  context={context} handleParentClose={handleClose}/>
     </Modal.Content>
     <Modal.Actions>
-      <Button basic color='red' inverted onClick={handleClose}>
+      <Button inverted primary onClick={handleClose}>
         <Icon name='remove' /> Cancel
       </Button>
     </Modal.Actions>

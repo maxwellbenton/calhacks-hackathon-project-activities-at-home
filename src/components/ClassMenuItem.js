@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
-import { Button, Header, Icon, Modal, List } from 'semantic-ui-react'
+import { Button, Header, Icon, Modal, List, Grid, Segment } from 'semantic-ui-react'
 import CreateActivityModal from  './CreateActivityModal'
 import EditVideoModal from './EditVideoModal'
 import EditTaskModal from './EditTaskModal'
 import EditClassModal from './EditClassModal'
 
-const ListItem = ({title, description, handleOpen}) => {
+const ListItem = ({title, description, handleOpen }) => {
   return (
     <List.Item onClick={handleOpen}>
       <List.Content>
@@ -27,13 +27,21 @@ const displayEditButton = (classId, context, activity) => {
   }
 }
 
-const Activity = ({context, classId, activity}) => {
+const ActivityListItem = ({context, classId, activity}) => {
   return (
     <List.Item>
       <List.Content>
-        <List.Header>{activity.title}</List.Header>
-        <List.Header>{activity.description}</List.Header>
-        {displayEditButton(classId, context, activity)}
+        <Grid padded>
+          <Grid.Row columns={2}>
+            <Grid.Column width={13}>
+              <Header>{activity.title}</Header>
+              <Header sub>{activity.description}</Header>
+            </Grid.Column>
+            <Grid.Column  width={3}>
+              {displayEditButton(classId, context, activity)}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
       </List.Content>
     </List.Item>
   )
@@ -46,7 +54,7 @@ const handleClassStart = ({classId, context}, handleClose) => {
 
 const displayClassActivities = ({classId, context}) => {
   let classItem = context.data.classes.find(classItem => classItem.id === classId)
-  return classItem.activities.map(activity => <Activity context={context} key={activity.activityId} classId={classId} activity={activity}/>)
+  return classItem.activities.map(activity => <ActivityListItem context={context} key={activity.activityId} classId={classId} activity={activity}/>)
 }
 
 const ClassMenuItem = (props) => {
@@ -54,27 +62,45 @@ const ClassMenuItem = (props) => {
   
   const handleOpen = () => setModalState({ modalOpen: true })
   const handleClose = () => setModalState({ modalOpen: false })
-
   return (
     <Modal 
       trigger={<ListItem handleOpen={handleOpen} {...props}/>} 
       open={modalState.modalOpen}
-      basic
       size='small'
     >
-      <Header icon='arrow alternate circle right outline' content={props.title} /><EditClassModal {...props}/>
-      <h3>{props.description}</h3>
-      <h3>Activities <CreateActivityModal {...props} /></h3>
-      <div className="listBox">
-        <List selection verticalAlign='middle' divided relaxed>
-          {displayClassActivities(props)}
-        </List>
-      </div>
+      <Header icon='arrow alternate circle right outline'>
+        <Icon name='book' circular />
+        <Header.Content><span className="title">{props.title}</span><EditClassModal {...props}/></Header.Content>
+      </Header>
+      <Modal.Content>
+        <Modal.Description>
+          <Grid padded>
+            <Grid.Row columns={2}>
+              <Grid.Column>
+                <Header sub>{props.description}</Header>
+              </Grid.Column>
+              <Grid.Column>
+              <Button floated="right" disabled={props.activities.length === 0} color='green' inverted onClick={() => handleClassStart(props, handleClose)}>
+                <Icon name='checkmark' /> Start Class
+              </Button>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Modal.Description>
+        <Header><span className="title">Activities</span> <CreateActivityModal {...props} /></Header>
+        <div className="listBox">
+          <Segment vertical style={{overflow: 'auto' }}>
+            <List selection verticalAlign='middle' divided relaxed>
+              {displayClassActivities(props)}
+            </List>
+            </Segment>
+          </div>
+      </Modal.Content>
       <Modal.Actions>
-      <Button basic color='red' inverted onClick={handleClose}>
+      <Button inverted primary onClick={handleClose}>
         <Icon name='remove' /> Cancel
       </Button>
-      <Button disabled={props.activities.length === 0} color='green' inverted onClick={() => handleClassStart(props, handleClose)}>
+      <Button floated="right" disabled={props.activities.length === 0} color='green' inverted onClick={() => handleClassStart(props, handleClose)}>
         <Icon name='checkmark' /> Start Class
       </Button>
     </Modal.Actions>
