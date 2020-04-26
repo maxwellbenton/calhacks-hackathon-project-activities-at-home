@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import { Button, Icon, Modal, Form, Checkbox, List, Segment, Grid } from 'semantic-ui-react'
-import VideoResult from './VideoResult'
 import debounce from 'debounce'
+import VideoResult from './VideoResult'
+require('dotenv').config()
+
 
 const CreateVideoModal = ({classId, context, handleParentClose}) => {
   let [modalState, setModalState] = useState({ 
@@ -16,8 +18,7 @@ const CreateVideoModal = ({classId, context, handleParentClose}) => {
   })
 
   const getSearchResults = (query) => {
-    const API_KEY =`${process.env.REACT_APP_YOUTUBE_API}`
-    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${query}&key=${API_KEY}`)
+    fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${query}&key=${process.env.REACT_APP_YOUTUBE_API})
     .then(results => results.json())
     .then(json => {
       setModalState(prevState => ({

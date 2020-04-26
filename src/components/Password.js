@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Consumer from '../configContext'
+import { Segment, Form, Button, Icon } from 'semantic-ui-react'
 
 export default function Password() {  
   let [formData, setFormData] = useState({
@@ -10,8 +11,8 @@ export default function Password() {
 
   function handleSubmit(event, context) {
     event.preventDefault()
-    if (event.target['passwordInput'].value === event.target['passwordConfirm'].value) {
-      context.setPassword(event.target['passwordInput'].value)
+    if (formData.passwordInput === formData.passwordConfirm) {
+      context.setPassword(formData.passwordInput)
     } else {
       setFormData(prevState => ({
         ...prevState,
@@ -33,20 +34,16 @@ export default function Password() {
     <Consumer>
       {context => {
         return (
-          <div className="fullpage">
-            <form onSubmit={(event) => handleSubmit(event, context)}>
+          <Segment style={{maxWidth: '80vw', margin: 'auto'}}>
+            <Form onSubmit={(event) => handleSubmit(event, context)}>
               {formData.passwordFail ? <div>Passwords must match</div> : null}
-              <label htmlFor="passwordInput">
-                Enter password
-                <input id="passwordInput" type="text" onChange={handleChange} value={formData.passwordInput} />
-              </label>
-              <label htmlFor="passwordConfirm">
-                Confirm password
-                <input id="passwordConfirm" type="text" onChange={handleChange} value={formData.passwordConfirm} />
-              </label>
-              <input type="submit" />
-            </form>
-          </div>
+                <Form.Input type="password" label="Enter password" id="passwordInput" onChange={handleChange} value={formData.passwordInput} />
+                <Form.Input type="password" label="Confirm password" id="passwordConfirm" onChange={handleChange} value={formData.passwordConfirm} />
+                <Button color='green' inverted onClick={(event) => handleSubmit(event, context)}>
+                  <Icon name='checkmark' /> Create Password
+                </Button>
+            </Form>
+          </Segment>
         )
       }}
     </Consumer>

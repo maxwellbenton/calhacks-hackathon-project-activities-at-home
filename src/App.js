@@ -9,7 +9,9 @@ function App() {
   return (
     <div className="App">
       <ConfigProvider>
-        <h1> <Icon name='home' /> Activities @ Home</h1>
+        <Icon name='home' size='huge' />
+        <h1>At Home Sub</h1>
+        <h3>An easy way to organize your kid's day!</h3>
         <Main />
       </ConfigProvider>
     </div>
