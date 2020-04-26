@@ -67,7 +67,7 @@ const EditTaskModal = ({classId, activityId, context, handleParentClose, title, 
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button inverted primary inverted onClick={handleClose}>
+        <Button inverted primary onClick={handleClose}>
           <Icon name='remove' /> Cancel
         </Button>
         <Button color='red' inverted onClick={handleDelete}>

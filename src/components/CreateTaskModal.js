@@ -56,7 +56,7 @@ const CreateTaskModal = ({classId, context, handleParentClose}) => {
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button inverted primary inverted onClick={handleClose}>
+        <Button inverted primary onClick={handleClose}>
           <Icon name='remove' /> Cancel
         </Button>
         <Button color='green' inverted onClick={handleCreateTask}>
